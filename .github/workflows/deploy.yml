@@ -1,4 +1,4 @@
-name: Deploy to Firebase Hosting (v2)
+name: DEPLOY_FINAL_FORCED_V3
 on:
   push:
     branches:
