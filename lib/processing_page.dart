@@ -41,24 +41,50 @@ class _ProcessingPageState extends State<ProcessingPage> {
   }
 
   Future<void> _runAnalysis() async {
-    final text = ModalRoute.of(context)!.settings.arguments as String?;
-    if (text == null) {
-      // Si no hay texto, regresamos a la home
-      Future.delayed(const Duration(seconds: 1), () {
-        if (mounted) Navigator.pop(context);
-      });
-      return;
-    }
+    try {
+      // Agregamos un pequeño delay para asegurar que el contexto esté listo en web
+      await Future.delayed(const Duration(milliseconds: 500));
 
-    final service = ClaudeService();
-    final result = await service.analyzeNews(text);
+      final args = ModalRoute.of(context)?.settings.arguments;
+      final text = args is String ? args : null;
 
-    if (mounted) {
-      if (result != null) {
-        Navigator.pushReplacementNamed(context, '/results', arguments: result);
-      } else {
+      if (text == null) {
+        debugPrint("Error: No se recibió el texto de la noticia");
+        if (mounted) {
+          Navigator.pop(context);
+        }
+        return;
+      }
+
+      final service = ClaudeService();
+
+      // Usamos un timeout para evitar el congelamiento infinito
+      final result = await service.analyzeNews(text).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          debugPrint("Análisis agotó el tiempo de espera");
+          return null;
+        },
+      );
+
+      if (mounted) {
+        if (result != null) {
+          Navigator.pushReplacementNamed(context, '/results', arguments: result);
+        } else {
+          // En lugar de solo hacer pop, avisamos que algo salió mal
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Miau... hubo un problema analizando la noticia. ¡Inténtalo de nuevo!")),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint("ERROR CRÍTICO EN PROCESSING: $e");
+      if (mounted) {
         Navigator.pop(context);
-        // Aquí podríamos lanzar un Snackbar de error en la HomePage
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error técnico: $e")),
+        );
       }
     }
   }
