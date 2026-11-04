@@ -44,22 +44,35 @@ class _ChatPageState extends State<ChatPage> {
         throw Exception("No hay datos de análisis disponibles.");
       }
 
-      final response = await _claudeService.interpellate(widget.result!, userMsg, _messages);
-
-      setState(() {
-        _messages.add(ChatMessage(text: response, isUser: false));
+      // Implementamos un timeout para evitar que la pantalla se quede "congelada"
+      final response = await _claudeService.interpellate(
+        widget.result!,
+        userMsg,
+        _messages
+      ).timeout(const Duration(seconds: 8), onTimeout: () {
+        return "Miau... me distraje con una mariposa. 🦋 ¿Puedes repetir tu pregunta?";
       });
+
+      if (mounted) {
+        setState(() {
+          _messages.add(ChatMessage(text: response, isUser: false));
+        });
+      }
     } catch (e) {
       debugPrint("CHAT ERROR: $e");
-      setState(() {
-        _connectionError = "Error de conexión: $e";
-        _messages.add(ChatMessage(
-          text: "Miau... tengo problemas para conectar con mi cerebro central. Pero aquí tienes un consejo: ¡Cuestiona siempre la fuente y busca el sesgo! 🐾",
-          isUser: false,
-        ));
-      });
+      if (mounted) {
+        setState(() {
+          _connectionError = "Miau... error de conexión. 🐾";
+          _messages.add(ChatMessage(
+            text: "Miau... tengo problemas para conectar con mi cerebro central. ¡Pero no te rindas, sigue cuestionando la noticia!",
+            isUser: false,
+          ));
+        });
+      }
     } finally {
-      setState(() => _isTyping = false);
+      if (mounted) {
+        setState(() => _isTyping = false);
+      }
     }
   }
 
