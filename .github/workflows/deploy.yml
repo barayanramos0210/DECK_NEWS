@@ -14,6 +14,9 @@ jobs:
       - run: flutter pub get
       - run: flutter build web
       - name: Deploy to Firebase
-        run: npx firebase-tools deploy --only hosting --project deck-news-25755
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > service-account.json
+          export GOOGLE_APPLICATION_CREDENTIALS=service-account.json
+          npx firebase-tools deploy --only hosting --project deck-news-25755
         env:
-          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
