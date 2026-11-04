@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'theme.dart';
+import 'claude_service.dart';
+import 'analysis_model.dart';
 
 class ProcessingPage extends StatefulWidget {
-  final VoidCallback onFinished;
-
-  const ProcessingPage({super.key, required this.onFinished});
+  const ProcessingPage({super.key});
 
   @override
   State<ProcessingPage> createState() => _ProcessingPageState();
@@ -26,10 +26,10 @@ class _ProcessingPageState extends State<ProcessingPage> {
   void initState() {
     super.initState();
     _startMessageCycle();
+    _runAnalysis();
   }
 
   void _startMessageCycle() {
-    // Cambia el mensaje cada 2 segundos para dar dinamismo
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         setState(() {
@@ -38,6 +38,29 @@ class _ProcessingPageState extends State<ProcessingPage> {
         _startMessageCycle();
       }
     });
+  }
+
+  Future<void> _runAnalysis() async {
+    final text = ModalRoute.of(context)!.settings.arguments as String?;
+    if (text == null) {
+      // Si no hay texto, regresamos a la home
+      Future.delayed(const Duration(seconds: 1), () {
+        if (mounted) Navigator.pop(context);
+      });
+      return;
+    }
+
+    final service = ClaudeService();
+    final result = await service.analyzeNews(text);
+
+    if (mounted) {
+      if (result != null) {
+        Navigator.pushReplacementNamed(context, '/results', arguments: result);
+      } else {
+        Navigator.pop(context);
+        // Aquí podríamos lanzar un Snackbar de error en la HomePage
+      }
+    }
   }
 
   @override
@@ -50,10 +73,8 @@ class _ProcessingPageState extends State<ProcessingPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Animación del Gatito Pensativo
                 const GatitoThinking(),
                 const SizedBox(height: 40),
-                // Mensaje Dinámico
                 Text(
                   _messages[_messageIndex],
                   textAlign: TextAlign.center,
@@ -64,7 +85,6 @@ class _ProcessingPageState extends State<ProcessingPage> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                // Indicador de carga estilizado
                 const SizedBox(
                   width: 50,
                   height: 50,
@@ -90,7 +110,6 @@ class GatitoThinking extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        // Círculo de fondo con pulsación (efecto aura)
         Container(
           width: 200,
           height: 200,
@@ -99,13 +118,11 @@ class GatitoThinking extends StatelessWidget {
             color: DeckNewsTheme.colorPrimario.withOpacity(0.1),
           ),
         ),
-        // El gatito
         const Icon(
           Icons.pets,
           size: 120,
           color: DeckNewsTheme.colorPrimario,
         ),
-        // Burbuja de pensamiento (estilo minimalista)
         Positioned(
           top: 10,
           right: 20,

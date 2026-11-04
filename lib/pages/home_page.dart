@@ -93,14 +93,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _startAnalysis(String text) async {
-    _interactCat("Miau... deja que revise esto. Un segundo...");
-    final service = ClaudeService();
-    final result = await service.analyzeNews(text);
-    if (result != null && mounted) {
-      Navigator.pushNamed(context, '/results', arguments: result);
-    } else if (mounted) {
-      _interactCat("Ups, miau... no pude analizar esto. ¿Es una noticia real?");
-    }
+    // En lugar de analizar aquí y esperar, navegamos a la ProcessingPage
+    // que se encargará de la espera y la animación.
+    Navigator.pushNamed(
+      context,
+      '/processing',
+      arguments: text
+    );
   }
 
   @override
