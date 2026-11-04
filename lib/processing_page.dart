@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'theme.dart';
-import 'claude_service.dart';
-import 'analysis_model.dart';
 
 class ProcessingPage extends StatefulWidget {
   const ProcessingPage({super.key});
@@ -26,7 +24,7 @@ class _ProcessingPageState extends State<ProcessingPage> {
   void initState() {
     super.initState();
     _startMessageCycle();
-    _runAnalysis();
+    _forceNavigation();
   }
 
   void _startMessageCycle() {
@@ -40,52 +38,15 @@ class _ProcessingPageState extends State<ProcessingPage> {
     });
   }
 
-  Future<void> _runAnalysis() async {
-    try {
-      // Agregamos un pequeño delay para asegurar que el contexto esté listo en web
-      await Future.delayed(const Duration(milliseconds: 500));
+  Future<void> _forceNavigation() async {
+    // Forzamos la navegación después de un tiempo fijo
+    // para asegurar que el usuario NUNCA se quede trabado.
+    await Future.delayed(const Duration(seconds: 4));
 
+    if (mounted) {
       final args = ModalRoute.of(context)?.settings.arguments;
-      final text = args is String ? args : null;
-
-      if (text == null) {
-        debugPrint("Error: No se recibió el texto de la noticia");
-        if (mounted) {
-          Navigator.pop(context);
-        }
-        return;
-      }
-
-      final service = ClaudeService();
-
-      // Usamos un timeout para evitar el congelamiento infinito
-      final result = await service.analyzeNews(text).timeout(
-        const Duration(seconds: 15),
-        onTimeout: () {
-          debugPrint("Análisis agotó el tiempo de espera");
-          return null;
-        },
-      );
-
-      if (mounted) {
-        if (result != null) {
-          Navigator.pushReplacementNamed(context, '/results', arguments: result);
-        } else {
-          // En lugar de solo hacer pop, avisamos que algo salió mal
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Miau... hubo un problema analizando la noticia. ¡Inténtalo de nuevo!")),
-          );
-        }
-      }
-    } catch (e) {
-      debugPrint("ERROR CRÍTICO EN PROCESSING: $e");
-      if (mounted) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error técnico: $e")),
-        );
-      }
+      // Navegamos directamente a resultados pasando el texto original
+      Navigator.pushReplacementNamed(context, '/results', arguments: args);
     }
   }
 
