@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:deck_news/theme.dart';
 import 'package:deck_news/claude_service.dart';
-import 'package:deck_//deck_news/analysis_model.dart';
+import 'package:deck_news/analysis_model.dart';
 
 enum AppState { home, processing, results }
 
@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
     });
 
     final service = ClaudeService();
-    final result = await service.analyzeNews(_//controller.text);
+    final result = await service.analyzeNews(_controller.text);
 
     if (mounted) {
       setState(() {
