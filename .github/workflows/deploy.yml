@@ -1,4 +1,4 @@
-name: DEPLOY_FINAL_FORCED_V3
+name: Deploy Web
 on:
   push:
     branches:
