@@ -81,7 +81,10 @@ class _ChatPageState extends State<ChatPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      backgroundColor: const Color(0xFFDCC2A3), // Forzamos el color panelBg (beige)
       appBar: AppBar(
+        backgroundColor: const Color(0xFF4A2C11), // Forzamos panelBorder (marrón)
+        foregroundColor: Colors.white,
         title: const Text("Interpelar al Gatito"),
         actions: [
           IconButton(
@@ -114,13 +117,14 @@ class _ChatPageState extends State<ChatPage> {
           if (_isTyping)
             const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Text("Miau-Análisis está pensando... 🐾", style: TextStyle(fontStyle: FontStyle.italic)),
+              child: Text("Miau-Análisis está pensando... 🐾",
+                style: TextStyle(fontStyle: FontStyle.italic, color: Color(0xFF2B1A09))),
             ),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: theme.cardColor,
-              border: Border(top: BorderSide(color: theme.dividerColor)),
+              color: const Color(0xFFDCC2A3),
+              border: Border(top: BorderSide(color: const Color(0xFF4A2C11))),
             ),
             child: Row(
               children: [
@@ -129,6 +133,8 @@ class _ChatPageState extends State<ChatPage> {
                     controller: _controller,
                     decoration: InputDecoration(
                       hintText: "Hazle una pregunta crítica...",
+                      fillColor: Colors.white,
+                      filled: true,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
                     ),
                     onSubmitted: (_) => _sendMessage(),
@@ -136,8 +142,9 @@ class _ChatPageState extends State<ChatPage> {
                 ),
                 const SizedBox(width: 10),
                 FloatingActionButton(
+                  backgroundColor: const Color(0xFF4A2C11),
                   onPressed: _sendMessage,
-                  child: const Icon(Icons.send),
+                  child: const Icon(Icons.send, color: Colors.white),
                 ),
               ],
             ),
