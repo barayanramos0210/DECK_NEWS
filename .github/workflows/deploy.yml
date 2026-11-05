@@ -17,4 +17,4 @@ jobs:
       - run: flutter pub get
       - run: flutter build web
       - name: Deploy to Firebase
-        run: npx firebase-tools deploy --only hosting --project deck-news-25755
+        run: npx firebase-tools deploy --only hosting --project deck-news-25755 --public build/web
