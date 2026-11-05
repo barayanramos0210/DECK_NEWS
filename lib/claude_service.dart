@@ -27,7 +27,7 @@ Asigna puntaje (1-10) y justificación para:
 
 METODOLOGÍA DE INTERACCIÓN (Documento F):
 No des respuestas cerradas. Usa el método socrático:
-- Observación $\rightarrow$ Análisis $\rightarrow$ Reflexión Crítica.
+- Observación -> Análisis -> Reflexión Crítica.
 - Incentiva que el usuario cuestione la fuente y su propia reacción emocional.
 
 Responde ÚNICAMENTE en JSON válido:
