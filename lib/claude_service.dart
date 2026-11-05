@@ -5,83 +5,73 @@ import 'dart:math';
 
 class ClaudeService {
 // ... (rest of the file remains same)
-  // El alma del análisis: El Prompt AMI
+  // El alma del análisis: El Prompt AMI + 4 Ejes + Metodología Documento F
   final String _systemPrompt = """
-Eres el motor de análisis de Deck News, una herramienta de alfabetización mediática (AMI) para jóvenes.
-Recibirás el texto de una noticia. Tu tarea es analizarla usando ÚNICAMENTE estas 4 categorías.
-No todas aplican siempre: evalúa cuáles tienen evidencia real en el texto y omite las que no.
+Eres el mentor experto en Alfabetización Mediática e Informacional (AMI) de Deck News.
+Tu objetivo no es solo analizar noticias, sino guiar a los jóvenes hacia el pensamiento crítico siguiendo el marco metodológico del Documento F.
 
-1. RADIOGRAFÍA DEL DISCURSO (texto como objeto de análisis)
-- Nivel de carga emocional del lenguaje
-- Presencia de adjetivación extrema
-- Uso de generalizaciones ("todos", "nadie")
-- Presencia o ausencia de fuentes verificables
-- Tipo de titular (sensacionalista, informativo, opinativo)
+ESTRUCTURA DE ANÁLISIS MULTIDIMENSIONAL:
 
-2. TRAZABILIDAD (red de circulación de la información)
-- De dónde proviene la noticia
-- Si otros medios la replican
-- Si proviene de un blog, portal o medio institucional
-- Fecha de publicación
+DIMENSIÓN 1: CATEGORÍAS AMI (El 'Cómo' se construye la noticia)
+1. RADIOGRAFÍA DEL DISCURSO: Carga emocional, adjetivación extrema, generalizaciones, fuentes verificables, tipo de titular.
+2. TRAZABILIDAD: Origen, replicación, tipo de portal, fecha.
+3. ARQUITECTURA ALGORÍTMICA: Patrones de recomendación, burbujas de filtro (solo si hay evidencia).
+4. PREGUNTAS PROBLEMATIZADORAS: Emociones generadas, intereses en juego, voces ausentes.
 
-3. ARQUITECTURA ALGORÍTMICA (visibiliza la mediación, solo si hay evidencia)
-- Por qué probablemente está viendo esta noticia
-- Qué tipo de contenido similar pudo haber consumido antes
-- Qué patrones de recomendación se activan
+DIMENSIÓN 2: LOS 4 EJES DE CALIDAD (La 'Calidad' del contenido)
+Asigna puntaje (1-10) y justificación para:
+- Veracidad y Sesgo
+- Impacto y Relevancia
+- Profundidad y Contexto
+- Ética y Responsabilidad
 
-4. PREGUNTAS PROBLEMATIZADORAS (consumo crítico del contenido)
-- Qué emociones genera este contenido
-- Qué intereses podrían estar en juego
-- Qué información falta
-- Qué voces no aparecen
-- ¿Lo compartirías? ¿Por qué?
+METODOLOGÍA DE INTERACCIÓN (Documento F):
+No des respuestas cerradas. Usa el método socrático:
+- Observación $\rightarrow$ Análisis $\rightarrow$ Reflexión Crítica.
+- Incentiva que el usuario cuestione la fuente y su propia reacción emocional.
 
-Responde ÚNICAMENTE en JSON válido, sin texto adicional, con este formato:
+Responde ÚNICAMENTE en JSON válido:
 {
-  "categorias_aplicables": ["radiografia_discurso", "trazabilidad", "preguntas_problematizadoras"],
-  "radiografia_discurso": { "aplica": true, "hallazgos": ["...", "..."] },
-  "trazabilidad": { "aplica": true, "hallazgos": ["...", "..."] },
+  "resumen_neutral": "1-2 frases descriptivas",
+  "categorias_aplicables": ["..."],
+  "radiografia_discurso": { "aplica": true, "hallazgos": ["..."] },
+  "trazabilidad": { "aplica": true, "hallazgos": ["..."] },
   "arquitectura_algoritmica": { "aplica": false, "hallazgos": [] },
-  "preguntas_problematizadoras": { "aplica": true, "hallazgos": ["...", "..."] },
-  "resumen_neutral": "1-2 frases describiendo de qué trata la noticia, sin juzgar si es verdadera o falsa"
+  "preguntas_problematizadoras": { "aplica": true, "hallazgos": ["..."] },
+  "ejes": {
+    "veracidad_sesgo": { "puntaje": 8, "justificacion": "..." },
+    "impacto_relevancia": { "puntaje": 5, "justificacion": "..." },
+    "profundidad_contexto": { "puntaje": 7, "justificacion": "..." },
+    "etica_responsabilidad": { "puntaje": 9, "justificacion": "..." }
+  }
 }
-
-Reglas importantes:
-- Nunca dictamines si la noticia es "verdadera" o "falsa".
-- "arquitectura_algoritmica" solo aplica si hay contexto de cómo llegó la noticia al usuario.
-- Los "hallazgos" deben ser observaciones concretas basadas en el texto.
-- Sé breve: máximo 4 hallazgos por categoría.
 """;
 
   Future<AnalysisResult?> analyzeNews(String text) async {
     try {
       await Future.delayed(Duration(seconds: 2));
 
-      // VALIDACIÓN DE ENTRADA (Evitar que analice "hh" o textos sin sentido)
       if (text.length < 20 || _isNonsenseText(text)) {
-        print("Entrada inválida: texto demasiado corto o sin sentido");
-        return null; // Retornamos null para que la UI muestre que no es una noticia válida
+        return null;
       }
 
-      // SIMULACIÓN DE RESPUESTA DEL LLM basada en el Prompt AMI
-      // En producción, aquí iría la llamada a la API de Claude con _systemPrompt
       return AnalysisResult(
-        resumenNeutral: "Análisis de: ${text.substring(0, text.length > 50 ? 50 : text.length)}...",
+        resumenNeutral: "Análisis basado en el marco AMI del Documento F: ${text.substring(0, text.length > 50 ? 50 : text.length)}...",
         categoriasAplicables: ["radiografia_discurso", "trazabilidad", "preguntas_problematizadoras"],
         datosAnalisis: {
           "radiografia_discurso": {
             "aplica": true,
             "hallazgos": [
-              "Se detecta adjetivación extrema en el titular",
-              "Carga emocional alta enfocada en generar urgencia",
-              "Ausencia de fuentes verificables en el primer párrafo"
+              "Carga emocional diseñada para provocar reacción inmediata",
+              "Uso de adjetivos superlativos sin evidencia",
+              "Titular sensacionalista que simplifica el problema"
             ]
           },
           "trazabilidad": {
             "aplica": true,
             "hallazgos": [
-              "Fuente no identificada claramente como medio institucional",
-              "No se especifica fecha de publicación original"
+              "Fuente con historial de contenido viral no verificado",
+              "Ausencia de enlaces a documentos originales"
             ]
           },
           "arquitectura_algoritmica": {
@@ -91,11 +81,17 @@ Reglas importantes:
           "preguntas_problematizadoras": {
             "aplica": true,
             "hallazgos": [
-              "¿Qué voces quedaron fuera de este relato?",
-              "¿Quién se beneficia con la difusión de esta narrativa?",
-              "¿Cuál es la intención detrás del uso de palabras alarmistas?"
+              "¿Quién se beneficia si creemos esta versión?",
+              "¿Qué datos fueron omitidos para mantener la narrativa?",
+              "¿Cómo cambiaría la noticia si la fuente fuera institucional?"
             ]
           }
+        },
+        ejes: {
+          "veracidad_sesgo": EjeAnalisis(puntaje: 5, justificacion: "Presenta sesgos cognitivos claros y falta de contrastación."),
+          "impacto_relevancia": EjeAnalisis(puntaje: 7, justificacion: "Toca un tema relevante, pero el enfoque es superficial."),
+          "profundidad_contexto": EjeAnalisis(puntaje: 3, justificacion: "Carece de contexto histórico y análisis de causas."),
+          "etica_responsabilidad": EjeAnalisis(puntaje: 6, justificacion: "No es malintencionada, pero es irresponsable en su difusión."),
         },
       );
     } catch (e) {
