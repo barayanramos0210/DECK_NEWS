@@ -5,7 +5,7 @@ import 'analysis_model.dart';
 import 'pages/chat_page.dart';
 
 class ClaudeService {
-  // La API Key se carga desde las variables de entorno en el despliegue
+  // LLAVE CONFIGURADA DIRECTAMENTE PARA EL LANZAMIENTO FINAL
   final String _apiKey = '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';
   final String _apiUrl = 'https://api.openai.com/v1/chat/completions';
 
@@ -44,12 +44,12 @@ Formato esperado:
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
-          "model": "gpt-4o", // Usamos GPT-4o para máxima calidad en el análisis
+          "model": "gpt-4o",
           "messages": [
             {"role": "system", "content": _systemPrompt},
             {"role": "user", "content": "Analiza la siguiente noticia siguiendo el marco AMI: $text"}
           ],
-          "response_format": {"type": "json_object"} // Forzamos a OpenAI a responder JSON
+          "response_format": {"type": "json_object"}
         }),
       );
 
@@ -76,7 +76,7 @@ Formato esperado:
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
-          "model": "gpt-4o-mini", // Usamos mini para respuestas rápidas y baratas en el chat
+          "model": "gpt-4o-mini",
           "messages": [
             {"role": "system", "content": "Eres un mentor socrático de AMI. No des respuestas cerradas. Usa la información del análisis previo para hacer que el usuario reflexione. Sé breve, juvenil y empático."},
             {"role": "user", "content": "Análisis previo: ${jsonEncode(previousAnalysis.toJson())}\n\nUsuario dice: $userMessage"}
@@ -94,4 +94,3 @@ Formato esperado:
     }
   }
 }
-
