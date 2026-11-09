@@ -5,9 +5,8 @@ import 'analysis_model.dart';
 import 'pages/chat_page.dart';
 
 class ClaudeService {
-  // Llave de OpenAI configurada
   // La API Key se carga desde las variables de entorno en el despliegue
-  final String _apiKey = 'String.fromEnvironment('OPENAI_API_KEY')';
+  final String _apiKey = String.fromEnvironment('OPENAI_API_KEY');
   final String _apiUrl = 'https://api.openai.com/v1/chat/completions';
 
   final String _systemPrompt = """
@@ -95,6 +94,3 @@ Formato esperado:
     }
   }
 }
-
-
-
