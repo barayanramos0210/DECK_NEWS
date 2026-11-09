@@ -6,7 +6,7 @@ import 'pages/chat_page.dart';
 
 class ClaudeService {
   // La API Key se carga desde las variables de entorno en el despliegue
-  final String _apiKey = String.fromEnvironment('OPENAI_API_KEY');
+  final String _apiKey = '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';
   final String _apiUrl = 'https://api.openai.com/v1/chat/completions';
 
   final String _systemPrompt = """
@@ -94,3 +94,4 @@ Formato esperado:
     }
   }
 }
+
