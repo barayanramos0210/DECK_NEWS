@@ -15,7 +15,7 @@ jobs:
         with:
           channel: 'stable'
       - run: flutter pub get
-      - run: flutter build web
+      - run: flutter build web --dart-define=OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
       - name: Debugging Build Folder
         run: |
           echo "Checking build folder content..."
